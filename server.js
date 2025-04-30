@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -24,9 +23,14 @@ app.post('/convert', async (req, res) => {
     formData.append('userInput', text);
     formData.append('output', 'gt5DkfnL');
 
-    const response = await fetch('http://unicode.shresthaashusil.com.np/', {
+    // Fixed domain name - removed the extra 'a' in "shrestha"
+    const response = await fetch('http://unicode.shresthasushil.com.np/', {
       method: 'POST',
       body: formData,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36'
+      }
     });
 
     const html = await response.text();
@@ -39,6 +43,7 @@ app.post('/convert', async (req, res) => {
       res.status(500).json({ error: 'Conversion failed' });
     }
   } catch (err) {
+    console.error('Conversion error:', err);
     res.status(500).json({ error: err.message });
   }
 });
